@@ -16,7 +16,7 @@ if (!N8N_FORM) {
   throw new Error("N8N_FORM_URL is required");
 }
 
-export const config = { runtime: "edge" };
+export const config = { runtime: "nodejs" };
 
 function json(data, init = {}) {
   return new Response(JSON.stringify(data), {

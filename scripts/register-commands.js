@@ -15,8 +15,11 @@ if (!BOT_TOKEN) {
   process.exit(1);
 }
 
-if (!GUILD_ID) {
-  console.error("❌ Falta TEST_GUILD_ID");
+// Modo: "guild" (por defecto) o "global"
+const mode = (process.argv[2] || "guild").toLowerCase();
+
+if (mode === "guild" && !GUILD_ID) {
+  console.error("❌ Falta TEST_GUILD_ID para registrar en guild");
   process.exit(1);
 }
 
@@ -28,10 +31,16 @@ const commands = [
   },
 ];
 
-async function registerCommands() {
-  const url = `https://discord.com/api/v10/applications/${APP_ID}/guilds/${GUILD_ID}/commands`;
+const url =
+  mode === "global"
+    ? // GLOBAL: aparece en todos los servidores/DM donde esté el bot (tarda en propagarse)
+      `https://discord.com/api/v10/applications/${APP_ID}/commands`
+    : // GUILD: solo en un servidor, aparece inmediato
+      `https://discord.com/api/v10/applications/${APP_ID}/guilds/${GUILD_ID}/commands`;
 
-  console.log("🔄 Registrando comando /vincular...");
+async function registerCommands() {
+  console.log(`🔄 Registrando comandos en modo: ${mode.toUpperCase()}`);
+  console.log(`📡 URL: ${url}`);
 
   try {
     const res = await request(url, {
@@ -46,14 +55,21 @@ async function registerCommands() {
     const body = await res.body.text();
 
     if (res.statusCode < 300) {
-      console.log("✅ /vincular registrado correctamente");
-      console.log("📋 Respuesta:", JSON.parse(body));
+      console.log("✅ Comandos registrados correctamente");
+      try {
+        const parsed = JSON.parse(body);
+        console.log("📋 Respuesta:", parsed);
+      } catch {
+        console.log(body);
+      }
     } else {
       console.error("❌ Error al registrar:", res.statusCode);
       console.error("📋 Detalles:", body);
+      process.exit(1);
     }
   } catch (error) {
     console.error("❌ Error de conexión:", error.message);
+    process.exit(1);
   }
 }
 

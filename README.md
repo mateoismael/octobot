@@ -51,23 +51,49 @@ Configura estas variables en Vercel (Settings → Environment Variables):
 
 ### 3. Registrar Comandos Slash
 
-En Windows PowerShell:
+#### **Opción A: Registro en Guild (Desarrollo - Instantáneo)**
+
+Para pruebas en tu servidor, el comando aparece inmediatamente:
+
+**Windows PowerShell:**
 
 ```powershell
 $env:DISCORD_APPLICATION_ID="tu_app_id_aqui"
 $env:DISCORD_BOT_TOKEN="tu_bot_token_aqui"
 $env:TEST_GUILD_ID="tu_guild_id_aqui"
-node scripts/register-commands.js
+npm run register:guild
 ```
 
-En Linux/Mac:
+**Linux/Mac:**
 
 ```bash
 export DISCORD_APPLICATION_ID="tu_app_id_aqui"
 export DISCORD_BOT_TOKEN="tu_bot_token_aqui"
 export TEST_GUILD_ID="tu_guild_id_aqui"
-node scripts/register-commands.js
+npm run register:guild
 ```
+
+#### **Opción B: Registro Global (Producción)**
+
+Para que el comando esté disponible en todos los servidores donde esté el bot:
+
+**Windows PowerShell:**
+
+```powershell
+$env:DISCORD_APPLICATION_ID="tu_app_id_aqui"
+$env:DISCORD_BOT_TOKEN="tu_bot_token_aqui"
+npm run register:global
+```
+
+**Linux/Mac:**
+
+```bash
+export DISCORD_APPLICATION_ID="tu_app_id_aqui"
+export DISCORD_BOT_TOKEN="tu_bot_token_aqui"
+npm run register:global
+```
+
+⚠️ **Nota:** Los comandos globales pueden tardar hasta 1 hora en propagarse a todos los servidores.
 
 ## 🎯 Uso
 
